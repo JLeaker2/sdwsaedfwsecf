@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Mensajes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #mensajes {
+            border: 1px solid #ddd;
+            min-height: 300px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .mensaje {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .mensaje:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tablero de Mensajes</h1>
+    <div id="mensajes">
+        <p>No hay mensajes aún...</p>
+    </div>
+
+    <script>
+        // Función para cargar mensajes
+        async function cargarMensajes() {
+            try {
+                const respuesta = await fetch('/mensajes');
+                const mensajes = await respuesta.json();
+                
+                const contenedor = document.getElementById('mensajes');
+                
+                if (mensajes.length === 0) {
+                    contenedor.innerHTML = '<p>No hay mensajes aún...</p>';
+                    return;
+                }
+                
+                contenedor.innerHTML = '';
+                mensajes.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = 'mensaje';
+                    div.textContent = msg;
+                    contenedor.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error al cargar mensajes:', error);
+            }
+        }
+
+        // Cargar mensajes al inicio y cada 2 segundos
+        cargarMensajes();
+        setInterval(cargarMensajes, 2000);
+    </script>
+</body>
+</html>
